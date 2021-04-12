@@ -112,7 +112,7 @@ export class MulterAzureStorage implements StorageEngine {
                 break;
 
             default:
-                // Catch for if container name is provided but not a desired type    
+                // Catch for if container name is provided but not a desired type
                 this._containerName = this._promisifyStaticValue(this.DEFAULT_UPLOAD_CONTAINER);
                 break;
         }
@@ -132,7 +132,7 @@ export class MulterAzureStorage implements StorageEngine {
             case BlobUtilities.BlobContainerPublicAccessType.BLOB:
                 this._containerAccessLevel = BlobUtilities.BlobContainerPublicAccessType.BLOB;
                 break;
-                
+
             default:
                 // Fallback to the default container level
                 this._containerAccessLevel = this.DEFAULT_CONTAINER_ACCESS_LEVEL;
@@ -193,7 +193,7 @@ export class MulterAzureStorage implements StorageEngine {
                             contentType: file.mimetype,
                             contentDisposition: 'inline'
                         }
-                    }, 
+                    },
                     (cWSTBBError, result, response) => {
                     if (cWSTBBError) {
                         cb(cWSTBBError);
@@ -247,7 +247,8 @@ export class MulterAzureStorage implements StorageEngine {
         }
     }
 
-    async _removeFile(req: Request, file: MulterOutFile, cb: (error: Error) => void) {
+    // async _removeFile(req: Request, file: MulterOutFile, cb: (error: Error) => void) {
+    async _removeFile(req: Request, file: Express.Multer.File, cb: (error: Error) => void) {
         // Ensure we have no errors during setup
         if (this._error.errorList.length > 0) {
             cb(this._error);
@@ -262,7 +263,8 @@ export class MulterAzureStorage implements StorageEngine {
                 this._error.message = "Cannot use container. Check if provided options are correct.";
                 cb(this._error);
             } else {
-                await this._deleteBlobIfExists(containerName, file.blobName);
+                // await this._deleteBlobIfExists(containerName, file.blobName);
+                await this._deleteBlobIfExists(containerName, file.filename);
                 cb(null);
             }
         } catch (rFError) {
